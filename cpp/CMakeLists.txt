@@ -1,15 +1,55 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0)
-PROJECT(polyclipping)
+add_library(polyclipping clipper.cpp)
 
-SET(CMAKE_BUILD_TYPE "Release" CACHE STRING "Release type")
-SET(CMAKE_INSTALL_LIBDIR lib${LIB_SUFFIX})
+#### install
 
-SET(BUILD_SHARED_LIBS ON CACHE BOOL
-    "Build shared libraries (.dll/.so) instead of static ones (.lib/.a)")
-ADD_LIBRARY(polyclipping clipper.cpp)
+set(TARGET_PUBLIC_HDRS clipper.hpp)
 
-# The header name clipper.hpp is too generic, so install in a subdirectory
-INSTALL (FILES clipper.hpp DESTINATION include/polyclipping)
-INSTALL (TARGETS polyclipping LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+set(config_install_dir "lib/cmake/${PROJECT_NAME}")
+set(include_install_dir "include")
 
-SET_TARGET_PROPERTIES(polyclipping PROPERTIES VERSION 0.0.0 SOVERSION 0 )
+set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
+
+# Configuration
+set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
+set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
+set(targets_export_name "${PROJECT_NAME}Targets")
+set(namespace "${PROJECT_NAME}::")
+
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file(
+  "${version_config}" COMPATIBILITY SameMajorVersion
+  )
+
+configure_package_config_file(
+  "cmake/Config.cmake.in"
+  "${project_config}"
+  INSTALL_DESTINATION "${config_install_dir}"
+  )
+
+install(
+  TARGETS polyclipping
+  EXPORT "${targets_export_name}"
+  LIBRARY DESTINATION "lib"
+  ARCHIVE DESTINATION "lib"
+  RUNTIME DESTINATION "bin"
+  INCLUDES DESTINATION "${include_install_dir}"
+  )
+
+foreach(HEADER ${TARGET_PUBLIC_HDRS})
+  install(
+    FILES "${CMAKE_CURRENT_SOURCE_DIR}/${HEADER}"
+    DESTINATION "${include_install_dir}/${PROJECT_NAME}"
+    )
+endforeach()
+
+install(
+  FILES "${project_config}" "${version_config}"
+  DESTINATION "${config_install_dir}"
+  )
+
+install(
+  EXPORT "${targets_export_name}"
+  NAMESPACE "${namespace}"
+  DESTINATION "${config_install_dir}"
+)
