@@ -1,8 +1,8 @@
 /*******************************************************************************
 *                                                                              *
 * Author    :  Angus Johnson                                                   *
-* Version   :  4.8.0                                                           *
-* Date      :  30 April 2012                                                   *
+* Version   :  4.8.8                                                           *
+* Date      :  30 August 2012                                                  *
 * Website   :  http://www.angusj.com                                           *
 * Copyright :  Angus Johnson 2010-2012                                         *
 *                                                                              *
@@ -26,7 +26,7 @@
 * Paper no. DETC2005-85513 pp. 565-575                                         *
 * ASME 2005 International Design Engineering Technical Conferences             *
 * and Computers and Information in Engineering Conference (IDETC/CIE2005)      *
-* September 24–28, 2005 , Long Beach, California, USA                          *
+* September 24â€“28, 2005 , Long Beach, California, USA                          *
 * http://www.me.berkeley.edu/~mcmains/pubs/DAC05OffsetPolygon.pdf              *
 *                                                                              *
 *******************************************************************************/
@@ -79,12 +79,12 @@ bool Orientation(const Polygon &poly);
 double Area(const Polygon &poly);
 void OffsetPolygons(const Polygons &in_polys, Polygons &out_polys,
   double delta, JoinType jointype = jtSquare, double MiterLimit = 2);
-void SimplifyPolygon(const Polygon &in_poly, Polygons &out_polys);
-void SimplifyPolygons(const Polygons &in_polys, Polygons &out_polys);
-void SimplifyPolygons(Polygons &polys);
+void SimplifyPolygon(const Polygon &in_poly, Polygons &out_polys, PolyFillType fillType = pftEvenOdd);
+void SimplifyPolygons(const Polygons &in_polys, Polygons &out_polys, PolyFillType fillType = pftEvenOdd);
+void SimplifyPolygons(Polygons &polys, PolyFillType fillType = pftEvenOdd);
 
-void ReversePoints(Polygon& p);
-void ReversePoints(Polygons& p);
+void ReversePolygon(Polygon& p);
+void ReversePolygons(Polygons& p);
 
 //used internally ...
 enum EdgeSide { esNeither = 0, esLeft = 1, esRight = 2, esBoth = 3 };
